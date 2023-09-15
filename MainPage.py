@@ -2,8 +2,8 @@ import streamlit as st
 import assemblyai as aai
 import pandas as pd
 from pytube import YouTube
-import requests
-from time import sleep
+# import requests
+# from time import sleep
 
 
 #%%
@@ -37,76 +37,6 @@ def save_audio(url):
     print(file_name)
     return yt.title, file_name, yt.thumbnail_url
 
-@st.experimental_memo
-def upload_to_AssemblyAI(save_location):
-    CHUNK_SIZE = 5242880
-    print(save_location)
-
-    def read_file(filename):
-        with open(filename, 'rb') as _file:
-            while True:
-                print("chunk uploaded")
-                data = _file.read(CHUNK_SIZE)
-                if not data:
-                    break
-                yield data
-
-    upload_response = requests.post(
-        upload_endpoint,
-        headers=headers, data=read_file(save_location)
-    )
-    print(upload_response.json())
-
-    audio_url = upload_response.json()['upload_url']
-    print('Uploaded to', audio_url)
-
-    return audio_url
-
-@st.experimental_memo
-def start_analysis(audio_location):
-    config = aai.TranscriptionConfig(
-      summarization=True,
-      summary_model=aai.SummarizationModel.informative, # optional
-      summary_type=aai.SummarizationType.bullets, # optional
-      content_safety=True,
-      sentiment_analysis=True,
-      entity_detection=True,
-      iab_categories=True,
-      auto_highlights=True
-    )
-
-    transcriber = aai.Transcriber(config=config)
-    transcript = transcriber.transcribe(audio_location)
-    
-    return transcript
-
-@st.experimental_memo
-def get_analysis_results(polling_endpoint):
-
-    status = 'submitted'
-
-    while True:
-        print(status)
-        polling_response = requests.get(polling_endpoint, headers=headers)
-        status = polling_response.json()['status']
-        # st.write(polling_response.json())
-        # st.write(status)
-
-        if status == 'submitted' or status == 'processing' or status == 'queued':
-            print('not ready yet')
-            sleep(10)
-
-        elif status == 'completed':
-            print('creating transcript')
-
-            return polling_response
-
-            break
-        else:
-            print('error')
-            return False
-            break
-
 
 #%%
 st.title("YouTube Content Analyzer")
@@ -116,13 +46,6 @@ st.markdown("2. A summary of the video,")
 st.markdown("2. the topics that are discussed in the video,") 
 st.markdown("3. whether there are any sensitive topics discussed in the video.")
 st.markdown("Make sure your video is not long and link is in the format: https://www.youtube.com/watch?v=HfNnuQOHAaw and not https://youtu.be/HfNnuQOHAaw")
-
-def get_status(polling_endpoint):
-	polling_response = requests.get(polling_endpoint, headers=headers)
-	st.session_state['status'] = polling_response.json()['status']
-    
-def refresh_state():
-	st.session_state['status'] = 'submitted'
 
 # 'https://www.youtube.com/watch?v=E9hog8Maq1I'
 # 'https://www.youtube.com/watch?v=E9hog8Maq1I'
@@ -146,10 +69,10 @@ config = aai.TranscriptionConfig(
   iab_categories=True,
   auto_highlights=True
 )
-# if st.session_state['status'] == 'submitted':
+
 transcriber = aai.Transcriber(config=config)
 transcript = transcriber.transcribe(save_location)
-st.session_state['status'] = transcript.status
+
 
 #%%
 sensitive_data = [{
