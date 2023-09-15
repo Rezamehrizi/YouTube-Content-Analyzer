@@ -4,8 +4,7 @@ import pandas as pd
 from pytube import YouTube
 import requests
 from time import sleep
-import os
-os.chdir('C:/Users/rvalioll/Downloads/Content-Analyzer-master')
+
 
 #%%
 if 'status' not in st.session_state:
