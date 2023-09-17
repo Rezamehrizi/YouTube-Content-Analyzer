@@ -2,3 +2,4 @@ streamlit
 assemblyai
 pandas
 pytube
+functools
