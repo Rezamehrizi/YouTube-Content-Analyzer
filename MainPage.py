@@ -112,8 +112,16 @@ def main():
     # 'https://www.youtube.com/watch?v=E9hog8Maq1I'
     
     st.write( "**Note**: When submitting a video, kindly ensure that it is short in length. The analysis of the video will take approximately 20 percent of the video's total length.")
-    link = st.text_input('Enter your YouTube video link', 'https://www.youtube.com/watch?v=TGSXzFP1WkE')
-    st.video(link)
+    
+    default_video_bool = st.checkbox('Use the default video')
+    if default_video_bool:
+        url = 'https://www.youtube.com/watch?v=TGSXzFP1WkE'
+    else: 
+        url = ""
+        
+    link = st.text_input('Enter your YouTube video link', url)
+    if url:
+        st.video(link)
 
     if st.button("Analyze Video"):
         # Check if the video URL has changed
