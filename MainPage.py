@@ -111,7 +111,7 @@ def main():
     # 'https://www.youtube.com/watch?v=TGSXzFP1WkE'
     # 'https://www.youtube.com/watch?v=E9hog8Maq1I'
     
-    st.write( "**Note**: When submitting a video, kindly ensure that it is short in length. The analysis of the video will take approximately 20 percent of the video's total length.")
+    st.write( "**Note**: When submitting a video, kindly ensure that it is on YouTube and short in length. The analysis of the video will take approximately 20 percent of the video's total length.")
     
     default_video_bool = st.checkbox('Use the default video')
     if default_video_bool:
