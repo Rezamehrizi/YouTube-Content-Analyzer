@@ -31,7 +31,7 @@ st.markdown("""
 
 st.write("""
 <style>
-    button[data-baseweb="tab"] {font-size: 17px; }
+    button[data-baseweb="tab"] {font-size: 15px; }
     button[data-baseweb="tab"] > div[data-testid="stMarkdownContainer"] > p { font-size: 24px;}
 </style>
 """, unsafe_allow_html=True)
@@ -157,7 +157,7 @@ def main():
             confidence_column = topics_df.pop('confidence')
             topics_df['confidence'] = confidence_column
             topics_df = topics_df[topics_df['confidence'] >= .5]
-            st.dataframe(topics_df)
+            st.table(topics_df)
 
             st.markdown('---')
             st.subheader("Sensitive content")
@@ -198,7 +198,7 @@ def main():
                 for entity in transcript.entities]
 
             entity_df = pd.DataFrame(entity_data)
-            st.dataframe(entity_df)
+            st.table(entity_df)
 
 if __name__ == "__main__":
     main()
