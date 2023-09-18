@@ -115,7 +115,7 @@ def main():
     
     default_video_bool = st.checkbox('Use the default video')
     if default_video_bool:
-        url = 'https://www.youtube.com/watch?v=TGSXzFP1WkE'
+        url = 'https://www.youtube.com/watch?v=UNP03fDSj1U'
     else: 
         url = ""
         
