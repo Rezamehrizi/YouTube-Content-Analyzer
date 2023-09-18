@@ -31,7 +31,7 @@ st.markdown("""
 
 st.write("""
 <style>
-    button[data-baseweb="tab"] {font-size: 15px; }
+    button[data-baseweb="tab"] {font-size: 10px; }
     button[data-baseweb="tab"] > div[data-testid="stMarkdownContainer"] > p { font-size: 24px;}
 </style>
 """, unsafe_allow_html=True)
