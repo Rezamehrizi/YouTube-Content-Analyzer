@@ -120,7 +120,7 @@ def main():
         url = ""
         
     link = st.text_input('Enter your YouTube video link', url)
-    if url:
+    if link:
         st.video(link)
 
     if st.button("Analyze Video"):
