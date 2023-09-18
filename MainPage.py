@@ -36,6 +36,19 @@ st.write("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown(
+    """
+    <style>
+    p {
+        text-align: justify;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
 # Function to download audio
 @st.experimental_memo
 def save_audio(url):
@@ -66,8 +79,24 @@ def transcribe_audio(audio_path):
 
 # Main App
 def main():
-    st.title("YouTube Content Analyzer")
-    st.markdown("With this app, you can receive information about a YouTube video.")
+ 
+    # App title and description
+    st.title("YouTube Video Analyzer")
+    st.write("Using this application, you can comprehensively analyze the content of a YouTube video, gaining access to the following information:")
+    
+    # List of features
+    features = [
+        "1. **Video Transcription:** Obtain a complete written transcript of the video's spoken content.",
+        "2. **Video Summary:** Receive a concise overview summarizing the key points and themes within the video.",
+        "3. **Topics Discussed:** Explore the main subjects and themes addressed within the video.",
+        "4. **Content Sensitivity:** Evaluate the video's content for sensitivity, including considerations related to hate speech and sexuality.",
+        "5. **Sentiment Analysis:** Gauge the overall sentiment or emotional tone conveyed by the video's content.",
+        "6. **Entity Recognition:** Identify and categorize objects or entities discussed within the video."
+    ]
+    # Display features
+    st.write("\n".join(features))
+
+    
 
     # Check if session_state is initialized
     if 'video_info' not in st.session_state:
@@ -75,11 +104,14 @@ def main():
 
     if 'transcript_data' not in st.session_state:
         st.session_state.transcript_data = None
-
+    
+    # Use Markdown to create a horizontal line
+    st.markdown("---")
     # Input
     # 'https://www.youtube.com/watch?v=TGSXzFP1WkE'
     # 'https://www.youtube.com/watch?v=E9hog8Maq1I'
     
+    st.write( "**Note**: When submitting a video, kindly ensure that it is short in length. The analysis of the video will take approximately 20 percent of the video's total length.")
     link = st.text_input('Enter your YouTube video link', 'https://www.youtube.com/watch?v=TGSXzFP1WkE')
     st.video(link)
 
@@ -91,7 +123,8 @@ def main():
         else:
             link, video_title, save_location, video_thumbnail = st.session_state.video_info
             
-        st.header(video_title)
+        # st.subheader(video_title)
+        st.markdown(f"<h4>{video_title}</h4>", unsafe_allow_html=True)
         st.audio(save_location)
 
         if st.session_state.transcript_data is None or st.session_state.transcript_data[0] != link:
@@ -100,28 +133,35 @@ def main():
             st.session_state.transcript_data = (link, transcript)
         else:
             link, transcript = st.session_state.transcript_data
-
-
+        
         # Display tabs with emojis and spacing
+        st.markdown("---")
         tabs = st.tabs(["🎙️ Transcription  |  Summary", "📊 Topic | Sensitive Content", "🤔 Sentiment | Entity"])
 
         with tabs[0]:
             st.subheader("Transcription")
             st.write(transcript.text)
 
+            st.markdown('---')
             st.subheader("Summary")
             st.write(transcript.summary)
 
         with tabs[1]:
-            st.header("Topic")
+            st.subheader("Topic")
+            st.write("This section offers insights into the various topics discussed within the video along with their confidence level. It provides a comprehensive list of the main subjects, themes, or subjects covered during the video's content. Exploring the topic analysis can help you gain a clear understanding of the key areas of focus within the video, making it easier to navigate and comprehend its content.")
             topics_df = pd.DataFrame(transcript.iab_categories.summary.items())
             topics_df.columns = ['topic','confidence']
             topics_df["topic"] = topics_df["topic"].str.split(">")
             expanded_topics = topics_df.topic.apply(pd.Series).add_prefix('topic_level_')
             topics_df = topics_df.join(expanded_topics).drop('topic', axis=1).sort_values(['confidence'], ascending=False).fillna('')
+            confidence_column = topics_df.pop('confidence')
+            topics_df['confidence'] = confidence_column
+            topics_df = topics_df[topics_df['confidence'] >= .5]
             st.dataframe(topics_df)
 
+            st.markdown('---')
             st.subheader("Sensitive content")
+            st.write("This section provides an assessment of the sensitivity of the content within the video. It evaluates whether the video contains any potentially sensitive or controversial topics, themes, or discussions. The analysis assigns confidence scores to indicate the level of sensitivity associated with different aspects of the video's content.")
             if transcript.content_safety.summary:
                 sensitive_data = [{
                     'Label': key,
@@ -131,10 +171,13 @@ def main():
                 sensitive_df = pd.DataFrame(sensitive_data)
                 st.write(sensitive_df)
             else:
-                st.write('There is no sensitive content in this video')
+                # st.write('There is no sensitive content in this video')
+                st.markdown('<p style="color: green;">There is no sensitive content in this video</p>', unsafe_allow_html=True)
+
 
         with tabs[2]:
             st.subheader("Sentiment Analysis")
+            st.write("This section offers an evaluation of the overall sentiment expressed within the video  along with their confidence level. It assesses the emotional tone and sentiment type conveyed throughout the video's content, whether it be positive, negative, or neutral. The analysis provides insights into the prevailing sentiments and emotions that characterize the video's narrative or discussion.")
             sentiment_data = [{
                 'Text': result.text,
                 'Sentiment Type': result.sentiment,
@@ -142,9 +185,13 @@ def main():
                 for result in transcript.sentiment_analysis]
 
             sentiment_df = pd.DataFrame(sentiment_data)
-            st.dataframe(sentiment_df)
 
-            st.header("Entity")
+            st.table(sentiment_df)
+            
+
+            st.markdown('---')
+            st.subheader("Entity")
+            st.write("This section presents a comprehensive examination of the entities discussed in the video. Entities refer to specific individuals, organizations, locations, or other notable subjects that are mentioned throughout the video's content. The analysis provides insights into the types of entities featured and their relevance within the context of the video. ")
             entity_data = [{
                 'Text': entity.text,
                 'Entity Type': entity.entity_type}
