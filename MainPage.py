@@ -90,7 +90,7 @@ def transcribe_audio(audio_path):
 def main():
  
     # App title and description
-    st.title("YouTube Video Analyzr")
+    st.title("YouTube Video Analyzer")
     st.write("Using this application, you can comprehensively analyze the content of a YouTube video, gaining access to the following information:")
     
     # List of features
