@@ -47,6 +47,15 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# Define custom CSS style to change background color
+custom_css = """
+<style>
+body {
+    background-color: red; /* Change this to your desired background color */
+}
+</style>
+"""
+st.markdown(custom_css, unsafe_allow_html=True)
 
 
 # Function to download audio
