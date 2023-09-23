@@ -16,6 +16,7 @@ aai.settings.api_key = API_KEY
 st.markdown("""<style>p {text-align: justify;}</style>""", unsafe_allow_html=True)
 # Use one-line Markdown to set the page layout to wide
 st.markdown('<style>.reportview-container{width:100%;}</style>', unsafe_allow_html=True)
+
 # Markdown for Background Color
 # st.markdown("""<style>[data-testid="stAppViewContainer"] {background-color: lightblue;}</style>""", unsafe_allow_html=True)
 
@@ -107,7 +108,7 @@ def main():
 
     st.markdown('---')
     # Hide the navigation bar until after clicking "Analyze Video"
-    if st.session_state.transcript_data[0] == link:
+    if st.session_state.transcript_data != None or st.session_state.transcript_data[0] == link:
         # Navigation bar
         selected = option_menu(
             menu_title=None,
