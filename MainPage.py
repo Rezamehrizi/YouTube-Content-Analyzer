@@ -201,6 +201,6 @@ def main():
             st.table(entity_df)
 
 if __name__ == "__main__":
-    cols = st.columns([1, 10, 1])
+    cols = st.columns([2, 12, 2])
     with cols[1]:
         main()
