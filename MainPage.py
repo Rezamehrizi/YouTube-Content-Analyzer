@@ -14,6 +14,8 @@ aai.settings.api_key = API_KEY
 
 # Markdown for Centered Text
 st.markdown("""<style>p {text-align: justify;}</style>""", unsafe_allow_html=True)
+# Set the page to wide mode
+st.set_page_config(layout="wide")
 # Markdown for Background Color
 # st.markdown("""<style>[data-testid="stAppViewContainer"] {background-color: lightblue;}</style>""", unsafe_allow_html=True)
 
