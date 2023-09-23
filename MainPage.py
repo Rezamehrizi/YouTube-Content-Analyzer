@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_option_menu import option_menu
 from pytube import YouTube
 import os
 import pandas as pd
@@ -11,51 +12,10 @@ API_KEY = "fdadb4bb044b40f58685660be655bcd9"
 # Initialize AssemblyAI
 aai.settings.api_key = API_KEY
 
-st.markdown("""
-<style>
-
-	.stTabs [data-baseweb="tab-list"] {gap: 50px; }
-    
-# 	.stTabs [data-baseweb="tab"] {height: 50px;
-#         white-space: pre-wrap;
-# 		background-color: #F0F2F6;
-# 		border-radius: 4px 4px 0px 0px;
-# 		gap: 1px;
-# 		padding-top: 10px;
-# 		padding-bottom: 10px;}
-
-# 	.stTabs [aria-selected="true"] {background-color: grey;}
-
-</style>""", unsafe_allow_html=True)
-
-
-st.write("""
-<style>
-    button[data-baseweb="tab"] {font-size: 17px; }
-    button[data-baseweb="tab"] > div[data-testid="stMarkdownContainer"] > p { font-size: 17px;}
-</style>
-""", unsafe_allow_html=True)
-
-st.markdown(
-    """
-    <style>
-    p {
-        text-align: justify;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# Define custom CSS style to change background color
-custom_css = """
-<style>
-body {
-    background-color: red; /* Change this to your desired background color */
-}
-</style>
-"""
-st.markdown(custom_css, unsafe_allow_html=True)
+# Markdown for Centered Text
+st.markdown("""<style>p {text-align: justify;}</style>""", unsafe_allow_html=True)
+# Markdown for Background Color
+# st.markdown("""<style>[data-testid="stAppViewContainer"] {background-color: lightblue;}</style>""", unsafe_allow_html=True)
 
 
 # Function to download audio
@@ -70,7 +30,6 @@ def save_audio(url):
     return yt.title, file_name, yt.thumbnail_url
 
 # Function to transcribe audio
-# @st.experimental_memo
 @lru_cache(maxsize=None)
 def transcribe_audio(audio_path):
     config = aai.TranscriptionConfig(
@@ -88,7 +47,6 @@ def transcribe_audio(audio_path):
 
 # Main App
 def main():
- 
     # App title and description
     st.title("YouTube Video Analyzer")
     st.write("Using this application, you can comprehensively analyze the content of a YouTube video, gaining access to the following information:")
@@ -105,57 +63,75 @@ def main():
     # Display features
     st.write("\n".join(features))
 
-    
-
     # Check if session_state is initialized
     if 'video_info' not in st.session_state:
         st.session_state.video_info = None
 
     if 'transcript_data' not in st.session_state:
         st.session_state.transcript_data = None
-    
+
     # Use Markdown to create a horizontal line
     st.markdown("---")
+
     # Input
     # 'https://www.youtube.com/watch?v=TGSXzFP1WkE'
     # 'https://www.youtube.com/watch?v=E9hog8Maq1I'
     
-    st.write( "**Note**: When submitting a video, kindly ensure that it is on YouTube and short in length. The analysis of the video will take approximately 20 percent of the video's total length.")
-    
+    st.write( "**Note**: When submitting a video, kindly ensure that it is short in length. The analysis of the video will take approximately 20 percent of the video's total length.")
     default_video_bool = st.checkbox('Use the default video')
     if default_video_bool:
-        url = 'https://www.youtube.com/watch?v=UNP03fDSj1U'
+        url = 'https://www.youtube.com/watch?v=TGSXzFP1WkE'
     else: 
         url = ""
-        
+
     link = st.text_input('Enter your YouTube video link', url)
-    if link:
+    if url:
         st.video(link)
 
-    if st.button("Analyze Video"):
-        # Check if the video URL has changed
-        if st.session_state.video_info is None or st.session_state.video_info[0] != link:
+    # if st.button("Analyze Video"):
+    # Check if the video URL has changed
+    if st.session_state.video_info is None or st.session_state.video_info[0] != link:
+        if st.button("Analyze Video"):
             video_title, save_location, video_thumbnail = save_audio(link)
             st.session_state.video_info = (link, video_title, save_location, video_thumbnail)
-        else:
-            link, video_title, save_location, video_thumbnail = st.session_state.video_info
-            
-        # st.subheader(video_title)
-        st.markdown(f"<h4>{video_title}</h4>", unsafe_allow_html=True)
-        st.audio(save_location)
-
-        if st.session_state.transcript_data is None or st.session_state.transcript_data[0] != link:
             with st.spinner("Transcribing audio..."):
                 transcript = transcribe_audio(save_location)
             st.session_state.transcript_data = (link, transcript)
-        else:
-            link, transcript = st.session_state.transcript_data
+            
+    else:
+        link, video_title, save_location, video_thumbnail = st.session_state.video_info
+        link, transcript = st.session_state.transcript_data
         
-        # Display tabs with emojis and spacing
-        st.markdown("---")
-        tabs = st.tabs(["🎙️ Transcription  |  Summary", "📊 Topic | Sensitive Content", "🤔 Sentiment | Entity"])
 
-        with tabs[0]:
+    st.markdown('---')
+    # Hide the navigation bar until after clicking "Analyze Video"
+    if st.session_state.transcript_data[0] == link:
+        # Navigation bar
+        selected = option_menu(
+            menu_title=None,
+            options=["Transcription  |  Summary", "Topic | Sensitivity", "Sentiment | Entity"],
+            icons=["mic", "search", "emoji-smile"],
+            menu_icon="cast",
+            default_index=0,
+            orientation="horizontal",
+            styles={
+                "container": {"padding": "0!important", "background-color": "#fafafa"},
+                "icon": {"color": "orange", "font-size": "25px"},
+                "nav-link": {
+                    "font-size": "15px",
+                    "text-align": "left",
+                    "margin": "0px",
+                    "--hover-color": "#E0EEEE",
+                },
+                "nav-link-selected": {"background-color": "#458B74"},
+            },
+        )
+        
+        # Update the selected section in session state
+        st.session_state.selected_section = selected
+        
+
+        if st.session_state.selected_section == "Transcription  |  Summary":
             st.subheader("Transcription")
             st.write(transcript.text)
 
@@ -163,7 +139,7 @@ def main():
             st.subheader("Summary")
             st.write(transcript.summary)
 
-        with tabs[1]:
+        elif st.session_state.selected_section == "Topic | Sensitivity":
             st.subheader("Topic")
             st.write("This section offers insights into the various topics discussed within the video along with their confidence level. It provides a comprehensive list of the main subjects, themes, or subjects covered during the video's content. Exploring the topic analysis can help you gain a clear understanding of the key areas of focus within the video, making it easier to navigate and comprehend its content.")
             topics_df = pd.DataFrame(transcript.iab_categories.summary.items())
@@ -192,7 +168,7 @@ def main():
                 st.markdown('<p style="color: green;">There is no sensitive content in this video</p>', unsafe_allow_html=True)
 
 
-        with tabs[2]:
+        elif st.session_state.selected_section == "Sentiment | Entity":
             st.subheader("Sentiment Analysis")
             st.write("This section offers an evaluation of the overall sentiment expressed within the video  along with their confidence level. It assesses the emotional tone and sentiment type conveyed throughout the video's content, whether it be positive, negative, or neutral. The analysis provides insights into the prevailing sentiments and emotions that characterize the video's narrative or discussion.")
             sentiment_data = [{
@@ -218,4 +194,6 @@ def main():
             st.table(entity_df)
 
 if __name__ == "__main__":
-    main()
+    cols = st.columns([1, 10, 1])
+    with cols[1]:
+        main()
