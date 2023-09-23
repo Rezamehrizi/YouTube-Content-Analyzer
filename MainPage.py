@@ -108,7 +108,7 @@ def main():
 
     st.markdown('---')
     # Hide the navigation bar until after clicking "Analyze Video"
-    if st.session_state.transcript_data != None or st.session_state.transcript_data[0] == link:
+    if st.session_state.transcript_data != None and st.session_state.transcript_data[0] == link:
         # Navigation bar
         selected = option_menu(
             menu_title=None,
