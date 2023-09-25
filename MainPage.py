@@ -18,7 +18,7 @@ st.markdown("""<style>p {text-align: justify;}</style>""", unsafe_allow_html=Tru
 st.markdown('<style>.reportview-container{width:100%;}</style>', unsafe_allow_html=True)
 # set the body font size
 st.markdown("""<style>body {font-size: 22px;}</style>""", unsafe_allow_html=True)
-st.markdown("""<style>p {font-size: 20px;}</style>""", unsafe_allow_html=True)
+st.markdown("""<style>p {font-size: 18px;}</style>""", unsafe_allow_html=True)
 
 
 # Markdown for Background Color
