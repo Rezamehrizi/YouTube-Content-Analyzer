@@ -15,7 +15,8 @@ aai.settings.api_key = API_KEY
 # Markdown for Centered Text
 st.markdown("""<style>p {text-align: justify;}</style>""", unsafe_allow_html=True)
 # Use one-line Markdown to set the page layout to wide
-st.markdown("""<style>.reportview-container{width:100%;}</style>""", unsafe_allow_html=True)
+# st.markdown("""<style>.reportview-container{width:100%;}</style>""", unsafe_allow_html=True)
+st.set_page_config(layout="wide")
 # set the body font size
 st.markdown("""<style>body {font-size: 22px;}</style>""", unsafe_allow_html=True)
 st.markdown("""<style>p {font-size: 18px;}</style>""", unsafe_allow_html=True)
