@@ -34,8 +34,7 @@ button_style = """
     width: 100px;
     height: 40px;
 """
-# Apply the custom style to the button
-st.write(f'<style>{button_style}</style>', unsafe_allow_html=True)
+
 
 # Markdown for Background Color
 # st.markdown("""<style>[data-testid="stAppViewContainer"] {background-color: lightblue;}</style>""", unsafe_allow_html=True)
@@ -125,7 +124,9 @@ def main():
         link, video_title, save_location, video_thumbnail = st.session_state.video_info
         link, transcript = st.session_state.transcript_data
         
-
+    # Apply the custom style to the button
+    st.write(f'<style>{button_style}</style>', unsafe_allow_html=True)
+    
     st.markdown('---')
     # Hide the navigation bar until after clicking "Analyze Video"
     if st.session_state.transcript_data != None and st.session_state.transcript_data[0] == link:
