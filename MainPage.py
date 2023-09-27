@@ -34,6 +34,8 @@ button_style = """
     width: 100px;
     height: 40px;
 """
+# Apply the custom style to the button
+st.write(f'<style>{button_style}</style>', unsafe_allow_html=True)
 
 # Markdown for Background Color
 # st.markdown("""<style>[data-testid="stAppViewContainer"] {background-color: lightblue;}</style>""", unsafe_allow_html=True)
