@@ -22,17 +22,17 @@ st.markdown("""<style>p {font-size: 18px;}</style>""", unsafe_allow_html=True)
 # Define a custom CSS style to change the button color
 button_style = """
     background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 8px;
-    width: 100px;
-    height: 40px;
+    # border: none;
+    # color: white;
+    # text-align: center;
+    # text-decoration: none;
+    # display: inline-block;
+    # font-size: 16px;
+    # margin: 4px 2px;
+    # cursor: pointer;
+    # border-radius: 8px;
+    # width: 100px;
+    # height: 40px;
 """
 
 
