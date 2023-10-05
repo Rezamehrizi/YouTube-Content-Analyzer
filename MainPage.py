@@ -6,12 +6,12 @@ import pandas as pd
 import assemblyai as aai
 from functools import lru_cache
 
-# Constants
-API_KEY = "fdadb4bb044b40f58685660be655bcd9"
 
 # Initialize AssemblyAI
-aai.settings.api_key = API_KEY
+aai.settings.api_key = st.secrets["ASSEMBLYAI_API_KEY"]
 
+# Set the page width to a custom value
+st.set_page_config(layout="wide")
 # Markdown for Centered Text
 st.markdown("""<style>p {text-align: justify;}</style>""", unsafe_allow_html=True)
 # Use one-line Markdown to set the page layout to wide
@@ -20,21 +20,22 @@ st.markdown('<style>.reportview-container{width:100%}</style>', unsafe_allow_htm
 st.markdown("""<style>body {font-size: 22px;}</style>""", unsafe_allow_html=True)
 st.markdown("""<style>p {font-size: 18px;}</style>""", unsafe_allow_html=True)
 # Define a custom CSS style to change the button color
-button_style = """
-    background-color: #4CAF50; /* Green */
-    # border: none;
-    # color: white;
-    # text-align: center;
-    # text-decoration: none;
-    # display: inline-block;
-    # font-size: 16px;
-    # margin: 4px 2px;
-    # cursor: pointer;
-    # border-radius: 8px;
-    # width: 100px;
-    # height: 40px;
-"""
 
+
+# Define a custom CSS style to change the button color
+button_style = """
+    background-color: #FF0000; /* Red */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 100px;
+    height: 40px;
+"""
 
 # Markdown for Background Color
 # st.markdown("""<style>[data-testid="stAppViewContainer"] {background-color: lightblue;}</style>""", unsafe_allow_html=True)
@@ -114,19 +115,21 @@ def main():
     # Check if the video URL has changed
     if st.session_state.video_info is None or st.session_state.video_info[0] != link:
         if st.button("Analyze Video"):
+            # Apply the custom style to the button
+            st.write(f'<style>{button_style}</style>', unsafe_allow_html=True)
             video_title, save_location, video_thumbnail = save_audio(link)
+            st.subheader(video_title)
             st.session_state.video_info = (link, video_title, save_location, video_thumbnail)
             with st.spinner("Transcribing audio..."):
                 transcript = transcribe_audio(save_location)
             st.session_state.transcript_data = (link, transcript)
             
     else:
-        link, video_title, save_location, video_thumbnail = st.session_state.video_info
-        link, transcript = st.session_state.transcript_data
         
-    # Apply the custom style to the button
-    st.write(f'<style>{button_style}</style>', unsafe_allow_html=True)
-    
+        link, video_title, save_location, video_thumbnail = st.session_state.video_info
+        st.subheader(f'Title: {video_title}')
+        link, transcript = st.session_state.transcript_data
+           
     st.markdown('---')
     # Hide the navigation bar until after clicking "Analyze Video"
     if st.session_state.transcript_data != None and st.session_state.transcript_data[0] == link:
