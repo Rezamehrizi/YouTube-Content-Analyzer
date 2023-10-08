@@ -70,10 +70,15 @@ def transcribe_audio(audio_path):
 
 # Main App
 def main():
+    # Display the image
+    st.image("youtube-analyzer-logo.jpeg", caption="", use_column_width=True)
     # App title and description
-    st.title("YouTube Video Analyzer")
-    st.write("Using this application, you can comprehensively analyze the content of a YouTube video, gaining access to the following information:")
-    
+    # st.title("YouTube Video Analyzer")
+    # st.write('')
+    # Add vertical space
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("Using this **YouTube Video Analyzer** application, you can comprehensively analyze the content of a YouTube video, gaining access to the following information:")
+
     # List of features
     features = [
         "1. **Video Transcription:** Obtain a complete written transcript of the video's spoken content.",
@@ -84,7 +89,7 @@ def main():
         "6. **Entity Recognition:** Identify and categorize objects or entities discussed within the video."
     ]
     # Display features
-    st.write("\n".join(features))
+    st.markdown("\n".join(features))
 
     # Check if session_state is initialized
     if 'video_info' not in st.session_state:
